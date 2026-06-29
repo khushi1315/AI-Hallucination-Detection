@@ -1,8 +1,6 @@
 from fastapi import FastAPI
-
 from database.db import engine
 from database.models import Base
-
 from routes.chat import router as chat_router
 from routes.verify import router as verify_router
 from routes.history import router as history_router

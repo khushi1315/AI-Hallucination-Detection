@@ -6,14 +6,12 @@ from services.retrieval_service import retrieve_sources
 
 router = APIRouter()
 
+
 @router.post("/chat")
 def chat(request: ChatRequest):
-    # Pass both question AND history to the LLM
-    answer = generate_answer(
-        request.question,
-        request.history      # NEW — pass history
-    )
+    history = request.history or []
 
+    answer = generate_answer(request.question, history)
     verification = verify_answer(answer)
     sources = retrieve_sources(answer)
 
@@ -23,16 +21,15 @@ def chat(request: ChatRequest):
         "sources": sources
     }
 
+
 @router.post("/generate-response")
 def generate_response(request: ChatRequest):
     """
-    Alias for /chat — same logic, different URL.
-    Required by the project spec.
+    Alias for /chat — required by project spec.
     """
-    answer = generate_answer(
-        request.question,
-        request.history
-    )
+    history = request.history or []
+
+    answer = generate_answer(request.question, history)
     verification = verify_answer(answer)
     sources = retrieve_sources(answer)
 

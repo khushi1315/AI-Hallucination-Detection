@@ -13,25 +13,32 @@ if not GROQ_API_KEY:
 client = Groq(api_key=GROQ_API_KEY)
 
 
-def generate_answer(question: str, history: list = []) -> str:
+def generate_answer(question: str, history: list = None) -> str:
     """
     Takes a question + conversation history.
     Builds a full message thread and sends to Groq.
     Returns Llama3's answer as a plain string.
     """
-    # Start with the system prompt — sets the AI's behaviour
+    if history is None:
+        history = []
+
     messages = [
         {"role": "system", "content": get_system_prompt()}
     ]
 
-    # Add conversation history so the model has context
     for msg in history:
-        messages.append({
-            "role": msg.role,
-            "content": msg.content
-        })
+        # Handles both Pydantic objects and plain dicts safely
+        if isinstance(msg, dict):
+            messages.append({
+                "role": msg["role"],
+                "content": msg["content"]
+            })
+        else:
+            messages.append({
+                "role": msg.role,
+                "content": msg.content
+            })
 
-    # Add the new question at the end
     messages.append({
         "role": "user",
         "content": question
