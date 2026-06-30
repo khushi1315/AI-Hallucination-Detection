@@ -7,4 +7,4 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     question: str
-    history: Optional[List[Message]] = []  # empty by default
+    history: Optional[List[Message]] = None  # empty by default

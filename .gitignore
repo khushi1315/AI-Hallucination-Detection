@@ -11,4 +11,5 @@ hallucination.db
 .idea/
 .vscode/
 
-*.log
+*.log__pycache__/ 
+*.pyc 
